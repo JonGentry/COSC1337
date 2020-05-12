@@ -17,10 +17,10 @@ public class WarGamesApp extends Application {
     private char comp = 'O';
 
     // Create and initialize cell
-    private Cell[][] cell =  new Cell[3][3];
+    private final Cell[][] cell =  new Cell[3][3];
 
     // Create and initialize a status label
-    private Label lblStatus = new Label("X's turn to play");
+    private final Label lblStatus = new Label("X's turn to play");
 
     @Override // Override the start method in the Application class
     public void start(Stage primaryStage) {
@@ -71,9 +71,7 @@ public class WarGamesApp extends Application {
                 && cell[1][1].getToken() == token
                 && cell[2][2].getToken() == token) {
             return true;
-        }
-
-        if (cell[0][2].getToken() == token
+        }else if (cell[0][2].getToken() == token
                 && cell[1][1].getToken() == token
                 && cell[2][0].getToken() == token) {
             return true;
@@ -139,7 +137,7 @@ public class WarGamesApp extends Application {
 
 
 
-        private boolean compTurn() {
+        private void compTurn() {
             int min = 0;
             int max = 2;
             int range = max - min + 1;
@@ -160,11 +158,10 @@ public class WarGamesApp extends Application {
                     comp = ' '; // Game is over
                 }
             }
-            return false;
         }
 
         /* Handle a mouse click event */
-        private boolean playerTurn() {
+        private void playerTurn() {
             // If cell is empty and game is not over
             if (token == ' ' && player != ' ') {
                 setToken(player); // Set token in the cell
@@ -182,7 +179,6 @@ public class WarGamesApp extends Application {
                     compTurn();
                 }
             }
-            return false;
         }
     }
 
