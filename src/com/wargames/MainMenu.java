@@ -1,4 +1,4 @@
-package com.wargames.mainmenu;
+package com.wargames;
 
 import javafx.application.Application;
 import javafx.stage.Stage;

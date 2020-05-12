@@ -1,4 +1,4 @@
-package com.wargames.computer;
+package com.wargames;
 
 import javafx.scene.image.ImageView;
 
