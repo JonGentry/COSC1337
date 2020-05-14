@@ -1,189 +1,159 @@
 package com.wargames;
 
 import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
+import javafx.scene.control.Button;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Ellipse;
-import javafx.scene.shape.Line;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class WarGamesApp extends Application {
-    // Indicate which player has a turn, initially it is the X player
-    private char player = 'X';
-    private char comp = 'O';
 
-    // Create and initialize cell
-    private final Cell[][] cell =  new Cell[3][3];
+    //TODO Need to make a main menu to select avatars (Complete), change backgrounds, and start game/ scene switch
 
-    // Create and initialize a status label
-    private final Label lblStatus = new Label("X's turn to play");
 
-    @Override // Override the start method in the Application class
+
+    // Override the start method in the Application class
+    @Override
     public void start(Stage primaryStage) {
-        // Pane to hold cell
-        GridPane pane = new GridPane();
-        for (int i = 0; i < 3; i++)
-            for (int j = 0; j < 3; j++)
-                pane.add(cell[i][j] = new Cell(), j, i);
 
-        BorderPane borderPane = new BorderPane();
-        borderPane.setCenter(pane);
-        borderPane.setBottom(lblStatus);
+        // Create a try block
+        try {
 
-        // Create a scene and place it in the stage
-        Scene scene = new Scene(borderPane, 450, 250);
-        primaryStage.setTitle("War Games"); // Set the stage title
-        primaryStage.setScene(scene); // Place the scene in the stage
-        primaryStage.show(); // Display the stage
-    }
+            /*-------------------------------------Button start stop pane--------------------------------------------*/
 
-    /** Determine if the cell are all occupied */
-    public boolean isFull() {
-        for (int i = 0; i < 3; i++)
-            for (int j = 0; j < 3; j++)
-                if (cell[i][j].getToken() == ' ')
-                    return false;
+            // Create a Vbox for the buttons
+            VBox buttonPane = new VBox(2);
 
-        return true;
-    }
+            // Set the botton panes spacing padding and alignment
+            buttonPane.setSpacing(15);
+            buttonPane.setPadding(new Insets(5, 5, 5, 5));
+            buttonPane.setAlignment(Pos.CENTER);
 
-    /** Determine if the player with the specified token wins */
-    public boolean isWon(char token) {
-        for (int i = 0; i < 3; i++)
-            if (cell[i][0].getToken() == token
-                    && cell[i][1].getToken() == token
-                    && cell[i][2].getToken() == token) {
-                return true;
-            }
+            // Create two buttons to play game or exit app
+            Button playGame = new Button("Play Game");
+            Button exit =  new Button("Exit");
 
-        for (int j = 0; j < 3; j++)
-            if (cell[0][j].getToken() ==  token
-                    && cell[1][j].getToken() == token
-                    && cell[2][j].getToken() == token) {
-                return true;
-            }
+            // Add the buttons to the button pane
+            buttonPane.getChildren().addAll(playGame, exit);
 
-        if (cell[0][0].getToken() == token
-                && cell[1][1].getToken() == token
-                && cell[2][2].getToken() == token) {
-            return true;
-        }else if (cell[0][2].getToken() == token
-                && cell[1][1].getToken() == token
-                && cell[2][0].getToken() == token) {
-            return true;
-        }
+            // TODO need to launch the gameboard on mouse click
+            /*
+            playGame.setOnMouseClicked(e -> {
+                launch(Class<? extends Application> GameBoard);
+                la
+            });
 
-        return false;
-    }
-
-    // An inner class for a cell
-    public class Cell extends Pane {
-        // Token used for this cell
-        private char token = ' ';
-
-        public Cell() {
-            setStyle("-fx-border-color: black");
-            this.setPrefSize(2000, 2000);
-            this.setOnMouseClicked(e -> playerTurn());
-        }
-
-        /** Return token */
-        public char getToken() {
-            return token;
-        }
-
-        /** Set a new token */
-        public void setToken(char c) {
-            token = c;
-
-            if (token == 'X') {
-                Line line1 = new Line(10, 10,
-                        this.getWidth() - 10, this.getHeight() - 10);
-                line1.endXProperty().bind(this.widthProperty().subtract(10));
-                line1.endYProperty().bind(this.heightProperty().subtract(10));
-                line1.setStroke(Color.ORANGE);
-                Line line2 = new Line(10, this.getHeight() - 10,
-                        this.getWidth() - 10, 10);
-                line2.startYProperty().bind(
-                        this.heightProperty().subtract(10));
-                line2.endXProperty().bind(this.widthProperty().subtract(10));
-                line2.setStroke(Color.ORANGE);
-
-                // Add the lines to the pane
-                this.getChildren().addAll(line1, line2);
-            }
-            else if (token == 'O') {
-                Ellipse ellipse = new Ellipse(this.getWidth() / 2,
-                        this.getHeight() / 2, this.getWidth() / 2 - 10,
-                        this.getHeight() / 2 - 10);
-                ellipse.centerXProperty().bind(
-                        this.widthProperty().divide(2));
-                ellipse.centerYProperty().bind(
-                        this.heightProperty().divide(2));
-                ellipse.radiusXProperty().bind(
-                        this.widthProperty().divide(2).subtract(10));
-                ellipse.radiusYProperty().bind(
-                        this.heightProperty().divide(2).subtract(10));
-                ellipse.setStroke(Color.GREEN);
-                ellipse.setFill(Color.WHITE);
-
-                getChildren().add(ellipse); // Add the ellipse to the pane
-            }
-        }
+             */
 
 
 
-        private void compTurn() {
-            int min = 0;
-            int max = 2;
-            int range = max - min + 1;
-            int see = 0;
-            while (see == 0) {
-                int i = (int)(Math.random() * range) + min;
-                int j = (int)(Math.random() * range) + min;
-                if (cell[i][j].getToken() == ' ') {
-                    cell[i][j].setToken(comp);
-                    see = 1;
-                }
-                if (isWon(comp)) {
-                    lblStatus.setText(comp + " won! The game is over");
-                    comp = ' '; // Game is over
-                }
-                else if (isFull()) {
-                    lblStatus.setText("Draw! The game is over");
-                    comp = ' '; // Game is over
-                }
-            }
-        }
+            // Set exit button to close on mouse click
+            exit.setOnMouseClicked(e -> primaryStage.close());
 
-        /* Handle a mouse click event */
-        private void playerTurn() {
-            // If cell is empty and game is not over
-            if (token == ' ' && player != ' ') {
-                setToken(player); // Set token in the cell
 
-                // Check game status
-                if (isWon(player)) {
-                    lblStatus.setText(player + " won! The game is over");
-                    player = ' '; // Game is over
-                }
-                else if (isFull()) {
-                    lblStatus.setText("Draw! The game is over");
-                    player = ' '; // Game is over
-                }
-                else {
-                    compTurn();
-                }
-            }
+            /*--------------------------------- Player Selection Pane Config-----------------------------------------*/
+
+            // Create a Vbox for Text and Grid Pane
+            VBox selectionPane = new VBox(2);
+
+            // Set the selection pane padding and alignment
+            selectionPane.setPadding(new Insets(5,5,5,5));
+            selectionPane.setAlignment(Pos.CENTER);
+
+            // Create string and Text for selection pane header
+            String text = "Please select an Avatar:";
+            Text avatarText = new Text(text);
+
+            // Add the avatarText to the selection pane
+            selectionPane.getChildren().add(avatarText);
+
+            // Create a grid plane for player avatar selection
+            GridPane avatarSelectionPane = new GridPane();
+
+            // Set Grid pane gaps, padding and alignment
+            avatarSelectionPane.setVgap(10);
+            avatarSelectionPane.setHgap(10);
+            avatarSelectionPane.setPadding(new Insets(5,5,5,5));
+            avatarSelectionPane.setAlignment(Pos.CENTER);
+
+
+
+            // Create a ToggleGroup for the avatar toggle buttons
+            ToggleGroup avatarGroup = new ToggleGroup();
+
+            // Create toggle buttons to correlate with the avatar selection
+            ToggleButton avatar1 = new ToggleButton();
+            ToggleButton avatar2 = new ToggleButton();
+            ToggleButton avatar3 = new ToggleButton();
+            ToggleButton avatar4 = new ToggleButton();
+            ToggleButton avatar5 = new ToggleButton();
+            ToggleButton avatar6 = new ToggleButton();
+
+            // Set the Avatar toggle buttons to toggle group
+            avatar1.setToggleGroup(avatarGroup);
+            avatar2.setToggleGroup(avatarGroup);
+            avatar3.setToggleGroup(avatarGroup);
+            avatar4.setToggleGroup(avatarGroup);
+            avatar5.setToggleGroup(avatarGroup);
+            avatar6.setToggleGroup(avatarGroup);
+
+            avatar1.setOnMouseClicked(e -> { Player.setAvatarSelected(Player.getAvatar1()); });
+
+
+            // Tie the Toggle Buttons and Player Avatars to the grid pane
+            avatarSelectionPane.add(avatar1, 0, 0);
+            avatarSelectionPane.add(Player.getAvatar1(), 1, 0);
+            avatarSelectionPane.add(avatar2, 2, 0);
+            avatarSelectionPane.add(Player.getAvatar2(), 3, 0);
+            avatarSelectionPane.add(avatar3, 4, 0);
+            avatarSelectionPane.add(Player.getAvatar3(), 5, 0);
+            avatarSelectionPane.add(avatar4, 0, 1);
+            avatarSelectionPane.add(Player.getAvatar4(), 1, 1);
+            avatarSelectionPane.add(avatar5, 2, 1);
+            avatarSelectionPane.add(Player.getAvatar5(), 3, 1);
+            avatarSelectionPane.add(avatar6, 4, 1);
+            avatarSelectionPane.add(Player.getAvatar6(), 5, 1);
+
+            // Add the avatarSelectionPane to the Vbox selection pane
+            selectionPane.getChildren().add(avatarSelectionPane);
+
+
+            // Create a Border pane
+            BorderPane borderPane = new BorderPane();
+            borderPane.setRight(buttonPane);
+            borderPane.setCenter(selectionPane);
+
+            // Create a menuScene and set it to hold the border pane
+            Scene menuScene = new Scene(borderPane, 675, 375);
+
+            // Set the stage title
+            primaryStage.setTitle("Main Menu");
+
+            // Place the menuScene in the stage
+            primaryStage.setScene(menuScene);
+
+            // Display the stage
+            primaryStage.show();
+
+
+
+            // Catch exceptions
+        } catch(Exception e) {
+
+            // And print the stack
+            e.printStackTrace();
         }
     }
-
 
     public static void main(String[] args) {
         launch(args);
     }
+
 }
