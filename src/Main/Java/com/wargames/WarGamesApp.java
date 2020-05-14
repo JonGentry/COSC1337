@@ -17,8 +17,6 @@ public class WarGamesApp extends Application {
 
     //TODO Need to make a main menu to select avatars (Complete), change backgrounds, and start game/ scene switch
 
-
-
     // Override the start method in the Application class
     @Override
     public void start(Stage primaryStage) {
@@ -31,8 +29,8 @@ public class WarGamesApp extends Application {
             // Create a Vbox for the buttons
             VBox buttonPane = new VBox(2);
 
-            // Set the botton panes spacing padding and alignment
-            buttonPane.setSpacing(15);
+            // Set the button panes spacing padding and alignment
+            buttonPane.setSpacing(100);
             buttonPane.setPadding(new Insets(5, 5, 5, 5));
             buttonPane.setAlignment(Pos.CENTER);
 
@@ -104,7 +102,13 @@ public class WarGamesApp extends Application {
             avatar5.setToggleGroup(avatarGroup);
             avatar6.setToggleGroup(avatarGroup);
 
+            // Set action on mouse click to update the avatar selected
             avatar1.setOnMouseClicked(e -> { Player.setAvatarSelected(Player.getAvatar1()); });
+            avatar2.setOnMouseClicked(e -> { Player.setAvatarSelected(Player.getAvatar2()); });
+            avatar3.setOnMouseClicked(e -> { Player.setAvatarSelected(Player.getAvatar3()); });
+            avatar4.setOnMouseClicked(e -> { Player.setAvatarSelected(Player.getAvatar4()); });
+            avatar5.setOnMouseClicked(e -> { Player.setAvatarSelected(Player.getAvatar5()); });
+            avatar6.setOnMouseClicked(e -> { Player.setAvatarSelected(Player.getAvatar6()); });
 
 
             // Tie the Toggle Buttons and Player Avatars to the grid pane
@@ -124,6 +128,7 @@ public class WarGamesApp extends Application {
             // Add the avatarSelectionPane to the Vbox selection pane
             selectionPane.getChildren().add(avatarSelectionPane);
 
+            /*------------------------------------Root pane and Scene config------------------------------------------*/
 
             // Create a Border pane
             BorderPane borderPane = new BorderPane();
@@ -133,16 +138,10 @@ public class WarGamesApp extends Application {
             // Create a menuScene and set it to hold the border pane
             Scene menuScene = new Scene(borderPane, 675, 375);
 
-            // Set the stage title
+            // Set the stage Title and Scene then play
             primaryStage.setTitle("Main Menu");
-
-            // Place the menuScene in the stage
             primaryStage.setScene(menuScene);
-
-            // Display the stage
             primaryStage.show();
-
-
 
             // Catch exceptions
         } catch(Exception e) {
