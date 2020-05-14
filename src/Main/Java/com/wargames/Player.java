@@ -6,7 +6,7 @@ import javafx.scene.image.ImageView;
 public class Player {
 
     // Declare and initialize ImageView for the player piece
-    private static final ImageView PLAYER_TOKEN = new ImageView(new Image("/image/catPiece.png",75,75,false,false));
+    private static final String PLAYER_TOKEN = "/image/catPiece.png";
 
     // Declare and initialize ImageViews for avatar selection
     private static final ImageView AVATAR_1 = new ImageView(new Image("/image/avatar1.png", 50, 50, false, false));
@@ -21,7 +21,7 @@ public class Player {
 
 
     /*-------------------------------------------Getters for all final variables-----------------------------------*/
-    public static ImageView getPlayerToken() {
+    public static String getPlayerToken() {
         return PLAYER_TOKEN;
     }
 
