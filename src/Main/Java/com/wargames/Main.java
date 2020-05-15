@@ -6,7 +6,7 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
-
+// This and SubClass are sample classes on how to switch scenes
 public class Main extends Application
 {
     BorderPane root = new BorderPane();

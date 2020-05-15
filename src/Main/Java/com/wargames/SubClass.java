@@ -4,6 +4,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
+// This and Main are sample classes on how to switch scenes
 public class SubClass
 {
 
