@@ -52,6 +52,7 @@ public class WarGamesApp extends Application {
 
 
 
+
             // Set exit button to close on mouse click
             exit.setOnMouseClicked(e -> primaryStage.close());
 
@@ -103,12 +104,12 @@ public class WarGamesApp extends Application {
             avatar6.setToggleGroup(avatarGroup);
 
             // Set action on mouse click to update the avatar selected
-            avatar1.setOnMouseClicked(e -> { Player.setAvatarSelected(Player.getAvatar1()); });
-            avatar2.setOnMouseClicked(e -> { Player.setAvatarSelected(Player.getAvatar2()); });
-            avatar3.setOnMouseClicked(e -> { Player.setAvatarSelected(Player.getAvatar3()); });
-            avatar4.setOnMouseClicked(e -> { Player.setAvatarSelected(Player.getAvatar4()); });
-            avatar5.setOnMouseClicked(e -> { Player.setAvatarSelected(Player.getAvatar5()); });
-            avatar6.setOnMouseClicked(e -> { Player.setAvatarSelected(Player.getAvatar6()); });
+            avatar1.setOnMouseClicked(e -> Player.setAvatarSelected(Player.getAvatar1()));
+            avatar2.setOnMouseClicked(e -> Player.setAvatarSelected(Player.getAvatar2()));
+            avatar3.setOnMouseClicked(e -> Player.setAvatarSelected(Player.getAvatar3()));
+            avatar4.setOnMouseClicked(e -> Player.setAvatarSelected(Player.getAvatar4()));
+            avatar5.setOnMouseClicked(e -> Player.setAvatarSelected(Player.getAvatar5()));
+            avatar6.setOnMouseClicked(e -> Player.setAvatarSelected(Player.getAvatar6()));
 
 
             // Tie the Toggle Buttons and Player Avatars to the grid pane
