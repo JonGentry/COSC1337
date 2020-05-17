@@ -106,32 +106,25 @@ public class GameBoard extends Application {
             if (token == 'X') {
                 ImageView playerToken = new ImageView(new Image(Player.getPlayerToken()));
 
-                // TODO fix the x & y property values
-                playerToken.xProperty().bind(this.layoutXProperty().divide(2));
-                playerToken.yProperty().bind(this.layoutYProperty().divide(2));
+                //Fit playerToken height and width properties to the cells
                 playerToken.fitHeightProperty().bind(this.heightProperty());
                 playerToken.fitWidthProperty().bind(this.widthProperty());
+
+
 
 
                 // Add the lines to the pane
                 this.getChildren().addAll(playerToken);
             }
             else if (token == 'O') {
-                Ellipse ellipse = new Ellipse(this.getWidth() / 2,
-                        this.getHeight() / 2, this.getWidth() / 2 - 10,
-                        this.getHeight() / 2 - 10);
-                ellipse.centerXProperty().bind(
-                        this.widthProperty().divide(2));
-                ellipse.centerYProperty().bind(
-                        this.heightProperty().divide(2));
-                ellipse.radiusXProperty().bind(
-                        this.widthProperty().divide(2).subtract(10));
-                ellipse.radiusYProperty().bind(
-                        this.heightProperty().divide(2).subtract(10));
-                ellipse.setStroke(Color.GREEN);
-                ellipse.setFill(Color.WHITE);
+                ImageView computerToken = new ImageView(new Image(Computer.getComputerToken()));
 
-                getChildren().add(ellipse); // Add the ellipse to the pane
+                //Fit computerToken height and width properties to the cells
+                computerToken.fitHeightProperty().bind(this.heightProperty());
+                computerToken.fitWidthProperty().bind(this.widthProperty());
+
+                //Add the lines to the pane
+                getChildren().addAll(computerToken); // Add the ellipse to the pane
             }
         }
 
