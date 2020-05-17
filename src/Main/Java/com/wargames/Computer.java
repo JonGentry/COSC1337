@@ -6,10 +6,10 @@ import javafx.scene.image.ImageView;
 public class Computer {
 
     // Declare and initialize ImageView for computer playing piece
-    private static final ImageView COMPUTER_TOKEN = new ImageView(new Image("/image/dogPiece.png",75,75,false,false));;
+    private static final String COMPUTER_TOKEN = "/image/dogPiece.png";
 
     // Getter for computer playing piece
-    public static ImageView getComputerToken() {
+    public static String getComputerToken() {
         return COMPUTER_TOKEN;
     }
 
