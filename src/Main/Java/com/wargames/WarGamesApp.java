@@ -14,6 +14,43 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class WarGamesApp extends Application {
+    BorderPane root = new BorderPane();
+    Stage primaryStage;
+    Scene scene;
+
+    // Create a Vbox for the buttons
+    VBox buttonPane = new VBox(2);
+
+    // Create two buttons to play game or exit app
+    Button playGame = new Button ("Play Game");
+    Button exit = new Button("Exit");
+
+    // Create a Vbox for Text and Grid Pane
+    VBox selectionPane = new VBox(2);
+
+    // Create string and Text for selection pane header
+    String text = "Please select an Avatar:";
+    Text avatarText = new Text(text);
+
+    // Create a ToggleGroup for the avatar toggle buttons
+    ToggleGroup avatarGroup = new ToggleGroup();
+
+    // Create toggle buttons to correlate with the avatar selection
+    ToggleButton avatar1 = new ToggleButton();
+    ToggleButton avatar2 = new ToggleButton();
+    ToggleButton avatar3 = new ToggleButton();
+    ToggleButton avatar4 = new ToggleButton();
+    ToggleButton avatar5 = new ToggleButton();
+    ToggleButton avatar6 = new ToggleButton();
+
+    public WarGamesApp(){
+        playGame.setOnAction(e-> {
+            GameBoard game = new GameBoard(primaryStage);
+        });
+
+        // Set exit button to close on mouse click
+        exit.setOnMouseClicked(e -> primaryStage.close());
+    }
 
     //TODO Need to make a main menu to select avatars (Complete), change backgrounds, and start game/ scene switch
 
@@ -24,51 +61,26 @@ public class WarGamesApp extends Application {
         // Create a try block
         try {
 
-            /*-------------------------------------Button start stop pane--------------------------------------------*/
+            this.primaryStage = primaryStage;
 
-            // Create a Vbox for the buttons
-            VBox buttonPane = new VBox(2);
+            /*-------------------------------------Button start stop pane--------------------------------------------*/
 
             // Set the button panes spacing padding and alignment
             buttonPane.setSpacing(100);
             buttonPane.setPadding(new Insets(5, 5, 5, 5));
             buttonPane.setAlignment(Pos.CENTER);
 
-            // Create two buttons to play game or exit app
-            Button playGame = new Button("Play Game");
-            Button exit =  new Button("Exit");
-
             // Add the buttons to the button pane
             buttonPane.getChildren().addAll(playGame, exit);
-
-            // TODO need to launch the gameboard on mouse click
-            /*
-            playGame.setOnMouseClicked(e -> {
-                launch(Class<? extends Application> GameBoard);
-                la
-            });
-
-             */
-
-
-
-
-            // Set exit button to close on mouse click
-            exit.setOnMouseClicked(e -> primaryStage.close());
 
 
             /*--------------------------------- Player Selection Pane Config-----------------------------------------*/
 
-            // Create a Vbox for Text and Grid Pane
-            VBox selectionPane = new VBox(2);
+
 
             // Set the selection pane padding and alignment
             selectionPane.setPadding(new Insets(5,5,5,5));
             selectionPane.setAlignment(Pos.CENTER);
-
-            // Create string and Text for selection pane header
-            String text = "Please select an Avatar:";
-            Text avatarText = new Text(text);
 
             // Add the avatarText to the selection pane
             selectionPane.getChildren().add(avatarText);
@@ -81,19 +93,6 @@ public class WarGamesApp extends Application {
             avatarSelectionPane.setHgap(10);
             avatarSelectionPane.setPadding(new Insets(5,5,5,5));
             avatarSelectionPane.setAlignment(Pos.CENTER);
-
-
-
-            // Create a ToggleGroup for the avatar toggle buttons
-            ToggleGroup avatarGroup = new ToggleGroup();
-
-            // Create toggle buttons to correlate with the avatar selection
-            ToggleButton avatar1 = new ToggleButton();
-            ToggleButton avatar2 = new ToggleButton();
-            ToggleButton avatar3 = new ToggleButton();
-            ToggleButton avatar4 = new ToggleButton();
-            ToggleButton avatar5 = new ToggleButton();
-            ToggleButton avatar6 = new ToggleButton();
 
             // Set the Avatar toggle buttons to toggle group
             avatar1.setToggleGroup(avatarGroup);
@@ -131,17 +130,13 @@ public class WarGamesApp extends Application {
 
             /*------------------------------------Root pane and Scene config------------------------------------------*/
 
-            // Create a Border pane
-            BorderPane borderPane = new BorderPane();
-            borderPane.setRight(buttonPane);
-            borderPane.setCenter(selectionPane);
 
-            // Create a menuScene and set it to hold the border pane
-            Scene menuScene = new Scene(borderPane, 675, 375);
+
+            scene = initStage();
 
             // Set the stage Title and Scene then play
             primaryStage.setTitle("Main Menu");
-            primaryStage.setScene(menuScene);
+            primaryStage.setScene(scene);
             primaryStage.show();
 
             // Catch exceptions
@@ -150,6 +145,14 @@ public class WarGamesApp extends Application {
             // And print the stack
             e.printStackTrace();
         }
+    }
+
+    private Scene initStage() {
+        root.setRight(buttonPane);
+        root.setCenter(selectionPane);
+
+        // Create a menuScene and set it to hold the border pane
+        return new Scene(root, 675, 375);
     }
 
     public static void main(String[] args) {
