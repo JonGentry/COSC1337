@@ -1,6 +1,5 @@
 package com.wargames;
 
-import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -8,23 +7,24 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Ellipse;
 import javafx.stage.Stage;
 
-public class GameBoard extends Application {
+public class GameBoard {
+    BorderPane root = new BorderPane();
+    Stage stage;
+
     // Indicate which player has a turn, initially it is the X player
     private char player = 'X';
     private char comp = 'O';
 
     // Create and initialize cell
-    private final Cell[][] cell =  new Cell[3][3];
+    private final Cell[][] cell = new Cell[3][3];
 
     // Create and initialize a status label
     Label PlayStatus = new Label("X's turn to play");
 
-    @Override // Override the start method in the Application class
-    public void start(Stage primaryStage) {
+
+    public GameBoard(Stage stage) {
 
         // Pane to hold cell
         GridPane pane = new GridPane();
@@ -32,18 +32,19 @@ public class GameBoard extends Application {
             for (int j = 0; j < 3; j++)
                 pane.add(cell[i][j] = new Cell(), j, i);
 
-        BorderPane borderPane = new BorderPane();
-        borderPane.setCenter(pane);
-        borderPane.setBottom(PlayStatus);
+        root.setCenter(pane);
+        root.setBottom(PlayStatus);
 
         // Create a gameScene and place it in the stage
-        Scene gameScene = new Scene(borderPane, 675, 375);
-        primaryStage.setTitle("War Games"); // Set the stage title
-        primaryStage.setScene(gameScene); // Place the gameScene in the stage
-        primaryStage.show(); // Display the stage
+        Scene gameScene = new Scene(root, 675, 375);
+        stage.setTitle("War Games"); // Set the stage title
+        stage.setScene(gameScene); // Place the gameScene in the stage
+        stage.show(); // Display the stage
     }
 
-    /** Determine if the cell are all occupied */
+    /**
+     * Determine if the cell are all occupied
+     */
     public boolean isFull() {
         for (int i = 0; i < 3; i++)
             for (int j = 0; j < 3; j++)
@@ -53,7 +54,9 @@ public class GameBoard extends Application {
         return true;
     }
 
-    /** Determine if the player with the specified token wins */
+    /**
+     * Determine if the player with the specified token wins
+     */
     public boolean isWon(char token) {
         for (int i = 0; i < 3; i++)
             if (cell[i][0].getToken() == token
@@ -63,7 +66,7 @@ public class GameBoard extends Application {
             }
 
         for (int j = 0; j < 3; j++)
-            if (cell[0][j].getToken() ==  token
+            if (cell[0][j].getToken() == token
                     && cell[1][j].getToken() == token
                     && cell[2][j].getToken() == token) {
                 return true;
@@ -73,7 +76,7 @@ public class GameBoard extends Application {
                 && cell[1][1].getToken() == token
                 && cell[2][2].getToken() == token) {
             return true;
-        }else if (cell[0][2].getToken() == token
+        } else if (cell[0][2].getToken() == token
                 && cell[1][1].getToken() == token
                 && cell[2][0].getToken() == token) {
             return true;
@@ -93,12 +96,16 @@ public class GameBoard extends Application {
             this.setOnMouseClicked(e -> playerTurn());
         }
 
-        /** Return token */
+        /**
+         * Return token
+         */
         public char getToken() {
             return token;
         }
 
-        /** Set a new token */
+        /**
+         * Set a new token
+         */
         public void setToken(char c) {
             token = c;
 
@@ -111,12 +118,9 @@ public class GameBoard extends Application {
                 playerToken.fitWidthProperty().bind(this.widthProperty());
 
 
-
-
                 // Add the lines to the pane
                 this.getChildren().addAll(playerToken);
-            }
-            else if (token == 'O') {
+            } else if (token == 'O') {
                 ImageView computerToken = new ImageView(new Image(Computer.getComputerToken()));
 
                 //Fit computerToken height and width properties to the cells
@@ -129,24 +133,22 @@ public class GameBoard extends Application {
         }
 
 
-
         private void compTurn() {
             int min = 0;
             int max = 2;
             int range = max - min + 1;
             int see = 0;
             while (see == 0) {
-                int i = (int)(Math.random() * range) + min;
-                int j = (int)(Math.random() * range) + min;
+                int i = (int) (Math.random() * range) + min;
+                int j = (int) (Math.random() * range) + min;
                 if (cell[i][j].getToken() == ' ') {
                     cell[i][j].setToken(comp);
                     see = 1;
                 }
                 if (isWon(comp)) {
-                    PlayStatus.setText(comp + " won! The game is over");
+                    PlayStatus.setText("Computer won! The game is over");
                     comp = ' '; // Game is over
-                }
-                else if (isFull()) {
+                } else if (isFull()) {
                     PlayStatus.setText("Draw! The game is over");
                     comp = ' '; // Game is over
                 }
@@ -161,22 +163,15 @@ public class GameBoard extends Application {
 
                 // Check game status
                 if (isWon(player)) {
-                    PlayStatus.setText(player + " won! The game is over");
+                    PlayStatus.setText("You won! The game is over");
                     player = ' '; // Game is over
-                }
-                else if (isFull()) {
+                } else if (isFull()) {
                     PlayStatus.setText("Draw! The game is over");
                     player = ' '; // Game is over
-                }
-                else {
+                } else {
                     compTurn();
                 }
             }
         }
-    }
-
-
-    public static void main(String[] args) {
-        launch(args);
     }
 }
