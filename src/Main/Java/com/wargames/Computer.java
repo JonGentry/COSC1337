@@ -5,8 +5,16 @@ import javafx.scene.image.ImageView;
 
 public class Computer {
 
+    // Declare and initialize ImageView for computer avatar
+    private static final ImageView COMP_AVATAR = new ImageView(new Image("/image/compAvatar.png", 100, 100, false, false));
+
     // Declare and initialize ImageView for computer playing piece
     private static final String COMPUTER_TOKEN = "/image/dogPiece.png";
+
+    // Getter for computer avatar
+    public static ImageView getCompAvatar() {
+        return COMP_AVATAR;
+    }
 
     // Getter for computer playing piece
     public static String getComputerToken() {
