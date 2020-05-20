@@ -9,15 +9,16 @@ public class Player {
     private static final String PLAYER_TOKEN = "/image/catPiece.png";
 
     // Declare and initialize ImageViews for avatar selection
-    private static final ImageView AVATAR_1 = new ImageView(new Image("/image/avatar1.png", 50, 50, false, false));
-    private static final ImageView AVATAR_2 = new ImageView(new Image("/image/avatar2.png", 50, 50, false, false));
-    private static final ImageView AVATAR_3 = new ImageView(new Image("/image/avatar3.png", 50, 50, false, false));
-    private static final ImageView AVATAR_4 = new ImageView(new Image("/image/avatar4.png", 50, 50, false, false));
-    private static final ImageView AVATAR_5 = new ImageView(new Image("/image/avatar5.png", 50, 50, false, false));
-    private static final ImageView AVATAR_6 = new ImageView(new Image("/image/avatar6.png", 50, 50, false, false));
+    private static final ImageView AVATAR_1 = new ImageView(new Image("/image/avatar1.png", 100, 100, false, false));
+    private static final ImageView AVATAR_2 = new ImageView(new Image("/image/avatar2.png", 100, 100, false, false));
+    private static final ImageView AVATAR_3 = new ImageView(new Image("/image/avatar3.png", 100, 100, false, false));
+    private static final ImageView AVATAR_4 = new ImageView(new Image("/image/avatar4.png", 100, 100, false, false));
+    private static final ImageView AVATAR_5 = new ImageView(new Image("/image/avatar5.png", 100, 100, false, false));
+    private static final ImageView AVATAR_6 = new ImageView(new Image("/image/avatar6.png", 100, 100, false, false));
 
     // Create a variable that can take player avatar selection
     private static ImageView avatarSelected;
+
 
 
     /*-------------------------------------------Getters for all final variables-----------------------------------*/

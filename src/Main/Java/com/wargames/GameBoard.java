@@ -1,12 +1,13 @@
 package com.wargames;
 
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class GameBoard {
@@ -17,23 +18,69 @@ public class GameBoard {
     private char player = 'X';
     private char comp = 'O';
 
+    Text taunt = new Text();
+
+    private int playerScore = 0;
+    private int compScore = 0;
+    Text score = new Text("Score is: " + playerScore + " - " + compScore);
+
+    Button clearBoard = new Button("Clear Board");
+
     // Create and initialize cell
     private final Cell[][] cell = new Cell[3][3];
 
+    String play = "Your turn to play";
     // Create and initialize a status label
-    Label PlayStatus = new Label("X's turn to play");
+    Text PlayStatus = new Text(play);
 
 
     public GameBoard(Stage stage) {
 
         // Pane to hold cell
         GridPane pane = new GridPane();
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++)
                 pane.add(cell[i][j] = new Cell(), j, i);
+        }
+
+        VBox playerPane = new VBox();
+        playerPane.getChildren().add(Player.getAvatarSelected());
+        Player.getAvatarSelected().setFitHeight(100);
+        Player.getAvatarSelected().setFitWidth(100);
+        playerPane.getChildren().add(clearBoard);
+        clearBoard.setOnAction(e-> {
+            if (!play.equalsIgnoreCase(PlayStatus.getText())) {
+                PlayStatus.setText(play);
+                taunt.setText("");
+                boardClear();
+                player = 'X';
+                comp = 'O';
+            }
+        });
+        playerPane.setAlignment(Pos.CENTER);
+        playerPane.setSpacing(10);
+        playerPane.setPadding(new Insets(5,5,5,5));
+
+        VBox compPane = new VBox();
+        compPane.getChildren().add(Computer.getCompAvatar());
+        compPane.getChildren().add(taunt);
+        compPane.setAlignment(Pos.CENTER);
+        compPane.setSpacing(10);
+        compPane.setPadding(new Insets(5,5,5,5));
+
+        HBox scorePane = new HBox();
+        score.prefHeight(20);
+        scorePane.getChildren().add(score);
+        scorePane.setAlignment(Pos.CENTER);
+        scorePane.setSpacing(10);
+        scorePane.setPadding(new Insets(5,5,5,5));
+
 
         root.setCenter(pane);
         root.setBottom(PlayStatus);
+        root.setRight(compPane);
+        root.setLeft(playerPane);
+        root.setTop(scorePane);
 
         // Create a gameScene and place it in the stage
         Scene gameScene = new Scene(root, 675, 375);
@@ -84,6 +131,15 @@ public class GameBoard {
 
         return false;
     }
+    private void boardClear() {
+        for (int i = 0; i < 3; i++)
+            for (int j = 0; j < 3; j++) {
+                cell[i][j].getChildren().clear();
+                cell[i][j].setToken(' ');
+            }
+    }
+
+
 
     // An inner class for a cell
     public class Cell extends Pane {
@@ -127,7 +183,7 @@ public class GameBoard {
                 computerToken.fitHeightProperty().bind(this.heightProperty());
                 computerToken.fitWidthProperty().bind(this.widthProperty());
 
-                //Add the lines to the pane
+                //Add the avatar to the pane
                 getChildren().addAll(computerToken); // Add the ellipse to the pane
             }
         }
@@ -147,7 +203,10 @@ public class GameBoard {
                 }
                 if (isWon(comp)) {
                     PlayStatus.setText("Computer won! The game is over");
+                    taunt.setText(Computer.taunt());
+                    compScore++;
                     comp = ' '; // Game is over
+                    score.setText("Score is: " + playerScore + " - " + compScore);
                 } else if (isFull()) {
                     PlayStatus.setText("Draw! The game is over");
                     comp = ' '; // Game is over
@@ -164,7 +223,9 @@ public class GameBoard {
                 // Check game status
                 if (isWon(player)) {
                     PlayStatus.setText("You won! The game is over");
+                    playerScore++;
                     player = ' '; // Game is over
+                    score.setText("Score is: " + playerScore + " - " + compScore);
                 } else if (isFull()) {
                     PlayStatus.setText("Draw! The game is over");
                     player = ' '; // Game is over
@@ -173,5 +234,7 @@ public class GameBoard {
                 }
             }
         }
+
+
     }
 }

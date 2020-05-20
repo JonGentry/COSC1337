@@ -45,7 +45,11 @@ public class WarGamesApp extends Application {
 
     public WarGamesApp(){
         playGame.setOnAction(e-> {
-            GameBoard game = new GameBoard(primaryStage);
+            if (!Player.getAvatarSelected().equals(null)) {
+                GameBoard game = new GameBoard(primaryStage);
+            }
+            else
+                System.out.println("Select an avatar"); // TODO change to animation or some text updater in gui
         });
 
         // Set exit button to close on mouse click
