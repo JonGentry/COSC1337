@@ -1,5 +1,6 @@
 package com.wargames;
 
+import javafx.animation.FadeTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -7,14 +8,20 @@ import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import static java.lang.Math.abs;
 
 public class GameBoard {
     BorderPane root = new BorderPane();
     Stage stage;
+
 
     // Indicate which player has a turn, initially it is the X player
     private char player = 'X';
@@ -33,10 +40,20 @@ public class GameBoard {
 
     String play = "Your turn to play";
     // Create and initialize a status label
-    Text PlayStatus = new Text(play);
+    Text playStatus = new Text(play);
+
+    // FadeTransitions for the score animations
+    FadeTransition scoreAnimation;
+
+    Text animationText;
+
 
 
     public GameBoard(Stage stage) {
+
+        playStatus.setFont(Font.font("Verdana", FontWeight.BOLD, 70));
+
+
 
         // Pane to hold cell
         GridPane pane = new GridPane();
@@ -51,10 +68,11 @@ public class GameBoard {
         Player.getAvatarSelected().setFitWidth(100);
         playerPane.getChildren().add(clearBoard);
         clearBoard.setOnAction(e -> {
-            if (!play.equalsIgnoreCase(PlayStatus.getText())) {
-                PlayStatus.setText(play);
+            if (!play.equalsIgnoreCase(playStatus.getText())) {
+                playStatus.setText(play);
                 taunt.setText("");
                 boardClear();
+                root.setBottom(playStatus);
                 player = 'X';
                 comp = 'O';
             }
@@ -79,7 +97,7 @@ public class GameBoard {
 
 
         root.setCenter(pane);
-        root.setBottom(PlayStatus);
+        root.setBottom(playStatus);
         root.setRight(compPane);
         root.setLeft(playerPane);
         root.setTop(scorePane);
@@ -206,36 +224,67 @@ public class GameBoard {
             Move bestMove = findBestMove(cellToCharArrayBoard());
             cell[bestMove.row][bestMove.col].setToken(comp);
             if (isWon(comp)) {
-                PlayStatus.setText("Computer won! The game is over");
+                playStatus.setText("Computer won!");
                 taunt.setText(Computer.taunt());
                 compScore++;
                 comp = '_'; // Game is over
                 score.setText("Score is: " + playerScore + " - " + compScore);
+
+                playScoreAnimation();
             } else if (isFull()) {
-                PlayStatus.setText("Draw! The game is over");
+                playStatus.setText("Draw!");
                 comp = '_'; // Game is over
+
+                playScoreAnimation();
             }
         }
+
+
 
         /* Handle a mouse click event */
         private void playerTurn() {
             // If cell is empty and game is not over
-            if (token == '_' && player != '_') {
+            if (token == '_' && player != '_' && !isWon(comp)) {
                 setToken(player); // Set token in the cell
 
                 // Check game status
                 if (isWon(player)) {
-                    PlayStatus.setText("You won! The game is over");
+                    playStatus.setText("You won!");
                     playerScore++;
                     player = '_'; // Game is over
                     score.setText("Score is: " + playerScore + " - " + compScore);
+
+                    playScoreAnimation();
                 } else if (isFull()) {
-                    PlayStatus.setText("Draw! The game is over");
+                    playStatus.setText("Draw!");
                     player = '_'; // Game is over
+
+                    playScoreAnimation();
                 } else {
                     compTurn();
                 }
             }
+        }
+
+        private void playScoreAnimation() {
+            animationText = new Text(100, 100, playStatus.getText());
+
+            animationText.setFont(Font.font("Verdana", FontWeight.BOLD, 70));
+            animationText.setFill(Color.DARKRED);
+
+            root.setBottom(animationText);
+
+            animationText.setTextAlignment(TextAlignment.CENTER);
+
+            scoreAnimation = new FadeTransition(Duration.millis(1500), animationText);
+
+            scoreAnimation.setFromValue(0.0);
+            scoreAnimation.setToValue(1.0);
+
+            scoreAnimation.setAutoReverse(true);
+            scoreAnimation.setCycleCount(2);
+
+            scoreAnimation.play();
         }
     }
 
