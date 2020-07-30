@@ -33,9 +33,9 @@ public class Computer {
         else if (randomizer == 1)
             return "Do you even know how to play?";
         else if (randomizer == 2)
-            return "You're going to have to do better than that!";
+            return "You're a Loser!";
         else
-            return "I can do this in my sleep";
+            return "I can do this in my sleep!";
 
 
 
