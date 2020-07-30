@@ -5,13 +5,15 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
 
 public class WarGamesApp extends Application {
     BorderPane root = new BorderPane();
@@ -43,20 +45,45 @@ public class WarGamesApp extends Application {
     ToggleButton avatar5 = new ToggleButton();
     ToggleButton avatar6 = new ToggleButton();
 
+
+    ChoiceBox background  = new ChoiceBox();
+    public static Color backgoundColor = Color.WHITE;
+
+
     public WarGamesApp(){
+
+        //TODO Backgound select not working, not sure why setFill or just a Color variable is not working for the scene
+        background.getItems().addAll("White", "Red", "Blue", "Yellow", "Green", "Pink");
+
+        background.setOnAction(e-> {
+            if (background.getValue().toString().equalsIgnoreCase("white"))
+                backgoundColor = Color.WHITE;
+            else if (background.getValue().toString().equalsIgnoreCase("red"))
+                backgoundColor = Color.RED;
+            else if (background.getValue().toString().equalsIgnoreCase("blue"))
+                scene.setFill(Color.BLUE);
+            else if (background.getValue().toString().equalsIgnoreCase("yellow"))
+                scene.setFill(Color.YELLOW);
+            else if (background.getValue().toString().equalsIgnoreCase("green"))
+                scene.setFill(Color.GREEN);
+            else if (background.getValue().toString().equalsIgnoreCase("pink"))
+                scene.setFill(Paint.valueOf("white"));
+            else
+                scene.setFill(Color.WHITE);
+        });
+
+        // Set play game button to switch stages and start game only if avatar selected
         playGame.setOnAction(e-> {
             if (!Player.getAvatarSelected().equals(null)) {
                 GameBoard game = new GameBoard(primaryStage);
             }
             else
-                System.out.println("Select an avatar"); // TODO change to animation or some text updater in gui
+                System.out.println("Select an avatar");
         });
 
         // Set exit button to close on mouse click
         exit.setOnMouseClicked(e -> primaryStage.close());
     }
-
-    //TODO Need to make a main menu to select avatars (Complete), change backgrounds, and start game/ scene switch
 
     // Override the start method in the Application class
     @Override
@@ -152,11 +179,12 @@ public class WarGamesApp extends Application {
     }
 
     private Scene initStage() {
+        root.setTop(background );
         root.setRight(buttonPane);
         root.setCenter(selectionPane);
 
         // Create a menuScene and set it to hold the border pane
-        return new Scene(root, 675, 375);
+        return new Scene(root, 675, 375, backgoundColor);
     }
 
     public static void main(String[] args) {
