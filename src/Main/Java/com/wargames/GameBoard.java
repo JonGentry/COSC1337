@@ -10,6 +10,8 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import static java.lang.Math.abs;
+
 public class GameBoard {
     BorderPane root = new BorderPane();
     Stage stage;
@@ -48,7 +50,7 @@ public class GameBoard {
         Player.getAvatarSelected().setFitHeight(100);
         Player.getAvatarSelected().setFitWidth(100);
         playerPane.getChildren().add(clearBoard);
-        clearBoard.setOnAction(e-> {
+        clearBoard.setOnAction(e -> {
             if (!play.equalsIgnoreCase(PlayStatus.getText())) {
                 PlayStatus.setText(play);
                 taunt.setText("");
@@ -59,21 +61,21 @@ public class GameBoard {
         });
         playerPane.setAlignment(Pos.CENTER);
         playerPane.setSpacing(10);
-        playerPane.setPadding(new Insets(5,5,5,5));
+        playerPane.setPadding(new Insets(5, 5, 5, 5));
 
         VBox compPane = new VBox();
         compPane.getChildren().add(Computer.getCompAvatar());
         compPane.getChildren().add(taunt);
         compPane.setAlignment(Pos.CENTER);
         compPane.setSpacing(10);
-        compPane.setPadding(new Insets(5,5,5,5));
+        compPane.setPadding(new Insets(5, 5, 5, 5));
 
         HBox scorePane = new HBox();
         score.prefHeight(20);
         scorePane.getChildren().add(score);
         scorePane.setAlignment(Pos.CENTER);
         scorePane.setSpacing(10);
-        scorePane.setPadding(new Insets(5,5,5,5));
+        scorePane.setPadding(new Insets(5, 5, 5, 5));
 
 
         root.setCenter(pane);
@@ -83,7 +85,7 @@ public class GameBoard {
         root.setTop(scorePane);
 
         // Create a gameScene and place it in the stage
-        Scene gameScene = new Scene(root, 675, 375);
+        Scene gameScene = new Scene(root, 675, 375, WarGamesApp.backgoundColor);
         stage.setTitle("War Games"); // Set the stage title
         stage.setScene(gameScene); // Place the gameScene in the stage
         stage.show(); // Display the stage
@@ -95,10 +97,21 @@ public class GameBoard {
     public boolean isFull() {
         for (int i = 0; i < 3; i++)
             for (int j = 0; j < 3; j++)
-                if (cell[i][j].getToken() == ' ')
+                if (cell[i][j].getToken() == '_')
                     return false;
 
         return true;
+    }
+
+    public char[][] cellToCharArrayBoard() {
+        char[][] temp = {{'_', '_', '_'},
+                {'_', '_', '_'},
+                {'_', '_', '_'}};
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++)
+                temp[i][j] = cell[i][j].getToken();
+        }
+        return temp;
     }
 
     /**
@@ -131,20 +144,20 @@ public class GameBoard {
 
         return false;
     }
+
     private void boardClear() {
         for (int i = 0; i < 3; i++)
             for (int j = 0; j < 3; j++) {
                 cell[i][j].getChildren().clear();
-                cell[i][j].setToken(' ');
+                cell[i][j].setToken('_');
             }
     }
-
 
 
     // An inner class for a cell
     public class Cell extends Pane {
         // Token used for this cell
-        private char token = ' ';
+        private char token = '_';
 
         public Cell() {
             setStyle("-fx-border-color: black");
@@ -190,51 +203,204 @@ public class GameBoard {
 
 
         private void compTurn() {
-            int min = 0;
-            int max = 2;
-            int range = max - min + 1;
-            int see = 0;
-            while (see == 0) {
-                int i = (int) (Math.random() * range) + min;
-                int j = (int) (Math.random() * range) + min;
-                if (cell[i][j].getToken() == ' ') {
-                    cell[i][j].setToken(comp);
-                    see = 1;
-                }
-                if (isWon(comp)) {
-                    PlayStatus.setText("Computer won! The game is over");
-                    taunt.setText(Computer.taunt());
-                    compScore++;
-                    comp = ' '; // Game is over
-                    score.setText("Score is: " + playerScore + " - " + compScore);
-                } else if (isFull()) {
-                    PlayStatus.setText("Draw! The game is over");
-                    comp = ' '; // Game is over
-                }
+            Move bestMove = findBestMove(cellToCharArrayBoard());
+            cell[bestMove.row][bestMove.col].setToken(comp);
+            if (isWon(comp)) {
+                PlayStatus.setText("Computer won! The game is over");
+                taunt.setText(Computer.taunt());
+                compScore++;
+                comp = '_'; // Game is over
+                score.setText("Score is: " + playerScore + " - " + compScore);
+            } else if (isFull()) {
+                PlayStatus.setText("Draw! The game is over");
+                comp = '_'; // Game is over
             }
         }
 
         /* Handle a mouse click event */
         private void playerTurn() {
             // If cell is empty and game is not over
-            if (token == ' ' && player != ' ') {
+            if (token == '_' && player != '_') {
                 setToken(player); // Set token in the cell
 
                 // Check game status
                 if (isWon(player)) {
                     PlayStatus.setText("You won! The game is over");
                     playerScore++;
-                    player = ' '; // Game is over
+                    player = '_'; // Game is over
                     score.setText("Score is: " + playerScore + " - " + compScore);
                 } else if (isFull()) {
                     PlayStatus.setText("Draw! The game is over");
-                    player = ' '; // Game is over
+                    player = '_'; // Game is over
                 } else {
                     compTurn();
                 }
             }
         }
+    }
 
+    static class Move {
+        int row, col;
+    }
 
+    Boolean isBoardNotFull(char[][] board) {
+        for (int i = 0; i < 3; i++)
+            for (int j = 0; j < 3; j++)
+                if (board[i][j] == '_')
+                    return true;
+        return false;
+    }
+
+    int evaluate(char[][] b) {
+
+        // Check Rows for victory condition
+        for (int row = 0; row < 3; row++) {
+            if (b[row][0] == b[row][1] &&
+                    b[row][1] == b[row][2]) {
+                if (b[row][0] == player) {
+                    return +10;
+                } else if (b[row][0] == comp) {
+                    return -10;
+                }
+            }
+        }
+
+        // Check Columns for victory condition
+        for (int col = 0; col < 3; col++) {
+            if (b[0][col] == b[1][col] &&
+                    b[1][col] == b[2][col]) {
+                if (b[0][col] == player) {
+                    return +10;
+                } else if (b[0][col] == comp)
+                    return -10;
+            }
+        }
+
+        // Check Diagonals for victory condition
+        if (b[0][0] == b[1][1] && b[1][1] == b[2][2]) {
+            if (b[0][0] == player) {
+                return +10;
+            } else if (b[0][0] == comp)
+                return -10;
+        }
+
+        if (b[0][2] == b[1][1] && b[1][1] == b[2][0]) {
+            if (b[0][2] == player) {
+                return +10;
+            } else if (b[0][2] == comp)
+                return -10;
+        }
+
+        // Return 0 if there's no win condition on this move
+        return 0;
+    }
+
+    // Considers all possible moves on the board, and assign values to each move to determine which is the most optimal
+    int minimax(char[][] board,
+                int depth, Boolean isMaximizer) {
+        int score = evaluate(board);
+        // If maximizer has a win condition, return it but subtract depth so that the score prioritizes close moves
+        if (score == 10)
+            return score - depth;
+
+        // If minimizer has a win condition, return it but add depth so that the score prioritizes close moves
+        if (score == -10)
+            return score + depth;
+
+        // If board is full and the end result is a Tie
+        if (!isBoardNotFull(board))
+            return 0;
+
+        // Maximizer's turn
+        int best;
+        if (isMaximizer) {
+            best = -1000;
+
+            // Iterate through all cells on the board
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+
+                    if (board[i][j] == '_') {
+
+                        board[i][j] = player;
+                        // Iterate moves recursively to find the best end results for the Maximizer
+                        best = Math.max(best, minimax(board,
+                                depth + 1, false));
+
+                        // Undo the move to return the board to the current state
+                        board[i][j] = '_';
+                    }
+                }
+            }
+        }
+
+        // Minimizer turn
+        else {
+            best = 1000;
+
+            // Iterate through all cells on the board
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 3; j++) {
+
+                    if (board[i][j] == '_') {
+                        board[i][j] = comp;
+                        // Iterate moves recursively to find the best end results for the Minimizer
+                        best = Math.min(best, minimax(board,
+                                depth + 1, true));
+
+                        // Undo the move to return the board to the current state
+                        board[i][j] = '_';
+                    }
+                }
+            }
+        }
+        return best;
+    }
+
+    // Finds the best possible move for the computer and player, and uses that knowledge for offense and defense
+    Move findBestMove(char[][] board) {
+        int bestVal = 1000;
+        Move bestMove = new Move();
+        bestMove.row = -1;
+        bestMove.col = -1;
+
+        // Iterate through all cells and calculate a minimax score for each empty cell
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (board[i][j] == '_') {
+                    // Look at the best moves for the computer to make offensively
+                    board[i][j] = comp;
+                    int bestMoveVal = minimax(board, 0, false);
+
+                    // Look at the best moves for the player, so the computer can use this information for defense
+                    board[i][j] = player;
+                    int worstMoveVal = minimax(board, 0, true);
+
+                    // Undo the move to return the board to the current state
+                    board[i][j] = '_';
+
+                    int offenseOrDefense;
+
+                    if (abs(bestMoveVal) < abs(worstMoveVal)) {
+                        // Defensive move
+                        offenseOrDefense = -worstMoveVal;
+                    } else {
+                        // Offensive move
+                        offenseOrDefense = bestMoveVal;
+                    }
+
+                    // Set the best Move to be the optimal move we picked above
+                    if ( offenseOrDefense < bestVal) {
+                        bestMove.row = i;
+                        bestMove.col = j;
+                        bestVal = offenseOrDefense;
+                    }
+                }
+            }
+        }
+
+        System.out.println("Value of the best move : " + bestVal);
+
+        return bestMove;
     }
 }
