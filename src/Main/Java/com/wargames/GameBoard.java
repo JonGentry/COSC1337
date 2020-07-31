@@ -101,9 +101,10 @@ public class GameBoard {
         root.setRight(compPane);
         root.setLeft(playerPane);
         root.setTop(scorePane);
+        root.setStyle(WarGamesApp.backgroundColor);
 
         // Create a gameScene and place it in the stage
-        Scene gameScene = new Scene(root, 675, 375, WarGamesApp.backgoundColor);
+        Scene gameScene = new Scene(root, 675, 375);
         stage.setTitle("War Games"); // Set the stage title
         stage.setScene(gameScene); // Place the gameScene in the stage
         stage.show(); // Display the stage
