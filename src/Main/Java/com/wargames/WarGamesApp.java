@@ -9,16 +9,19 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
+import java.awt.*;
 
 
 public class WarGamesApp extends Application {
     BorderPane root = new BorderPane();
     Stage primaryStage;
     Scene scene;
+    Pane pane = new Pane();
+    StackPane holder = new StackPane();
+    Canvas canvas = new Canvas();
 
     // Create a Vbox for the buttons
     VBox buttonPane = new VBox(2);
@@ -46,8 +49,8 @@ public class WarGamesApp extends Application {
     ToggleButton avatar6 = new ToggleButton();
 
 
-    ChoiceBox background  = new ChoiceBox();
-    public static Color backgoundColor = Color.WHITE;
+    ChoiceBox<String> background  = new ChoiceBox<String>();
+    public static String backgroundColor = "-fx-background-color: white";
 
 
     public WarGamesApp(){
@@ -57,24 +60,24 @@ public class WarGamesApp extends Application {
 
         background.setOnAction(e-> {
             if (background.getValue().toString().equalsIgnoreCase("white"))
-                backgoundColor = Color.WHITE;
+                backgroundColor = "-fx-background-color: white";
             else if (background.getValue().toString().equalsIgnoreCase("red"))
-                backgoundColor = Color.RED;
+                backgroundColor = "-fx-background-color: red";
             else if (background.getValue().toString().equalsIgnoreCase("blue"))
-                scene.setFill(Color.BLUE);
+                backgroundColor = "-fx-background-color: blue";
             else if (background.getValue().toString().equalsIgnoreCase("yellow"))
-                scene.setFill(Color.YELLOW);
+                backgroundColor = "-fx-background-color: yellow";
             else if (background.getValue().toString().equalsIgnoreCase("green"))
-                scene.setFill(Color.GREEN);
+                backgroundColor = "-fx-background-color: green";
             else if (background.getValue().toString().equalsIgnoreCase("pink"))
-                scene.setFill(Paint.valueOf("white"));
+                backgroundColor = "-fx-background-color: pink";
             else
-                scene.setFill(Color.WHITE);
+                backgroundColor = "-fx-background-color: white";
         });
 
         // Set play game button to switch stages and start game only if avatar selected
         playGame.setOnAction(e-> {
-            if (!Player.getAvatarSelected().equals(null)) {
+            if (Player.getAvatarSelected() != null) {
                 GameBoard game = new GameBoard(primaryStage);
             }
             else
@@ -182,9 +185,10 @@ public class WarGamesApp extends Application {
         root.setTop(background );
         root.setRight(buttonPane);
         root.setCenter(selectionPane);
+        root.setStyle(String.valueOf(backgroundColor));
 
         // Create a menuScene and set it to hold the border pane
-        return new Scene(root, 675, 375, backgoundColor);
+        return new Scene(root, 675, 375);
     }
 
     public static void main(String[] args) {
