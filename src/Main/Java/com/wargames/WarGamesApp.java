@@ -8,22 +8,25 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import java.awt.*;
-
-
+// Declare class and extend application
 public class WarGamesApp extends Application {
+
+    // Create a base borderpane, primary stage and scene
     BorderPane root = new BorderPane();
     Stage primaryStage;
     Scene scene;
-    Pane pane = new Pane();
-    StackPane holder = new StackPane();
-    Canvas canvas = new Canvas();
 
-    // Create a Vbox for the buttons
+
+    // Create a Vbox for the play and exit buttons
     VBox buttonPane = new VBox(2);
 
     // Create two buttons to play game or exit app
@@ -37,6 +40,7 @@ public class WarGamesApp extends Application {
     String text = "Please select an Avatar:";
     Text avatarText = new Text(text);
 
+
     // Create a ToggleGroup for the avatar toggle buttons
     ToggleGroup avatarGroup = new ToggleGroup();
 
@@ -48,28 +52,36 @@ public class WarGamesApp extends Application {
     ToggleButton avatar5 = new ToggleButton();
     ToggleButton avatar6 = new ToggleButton();
 
+    // Create a Hbox for the background text and choicebox
+    HBox backgroundSelect = new HBox(2);
 
-    ChoiceBox<String> background  = new ChoiceBox<String>();
+    // Create text to prompt the user
+    Text chooseBackground = new Text("Select a Background: ");
+
+    // Create a choicebox and set the default to white background
+    ChoiceBox<String> background  = new ChoiceBox<>();
     public static String backgroundColor = "-fx-background-color: white";
 
-
+    // Declare method for running the war games menu
     public WarGamesApp(){
 
-        //TODO Backgound select not working, not sure why setFill or just a Color variable is not working for the scene
+        // Add background choices to the choicebox
         background.getItems().addAll("White", "Red", "Blue", "Yellow", "Green", "Pink");
 
+        // Set action to choicebox selection
         background.setOnAction(e-> {
-            if (background.getValue().toString().equalsIgnoreCase("white"))
+            // If statement to see what is selected and to update the gameboard background
+            if (background.getValue().equalsIgnoreCase("white"))
                 backgroundColor = "-fx-background-color: white";
-            else if (background.getValue().toString().equalsIgnoreCase("red"))
+            else if (background.getValue().equalsIgnoreCase("red"))
                 backgroundColor = "-fx-background-color: red";
-            else if (background.getValue().toString().equalsIgnoreCase("blue"))
+            else if (background.getValue().equalsIgnoreCase("blue"))
                 backgroundColor = "-fx-background-color: blue";
-            else if (background.getValue().toString().equalsIgnoreCase("yellow"))
+            else if (background.getValue().equalsIgnoreCase("yellow"))
                 backgroundColor = "-fx-background-color: yellow";
-            else if (background.getValue().toString().equalsIgnoreCase("green"))
+            else if (background.getValue().equalsIgnoreCase("green"))
                 backgroundColor = "-fx-background-color: green";
-            else if (background.getValue().toString().equalsIgnoreCase("pink"))
+            else if (background.getValue().equalsIgnoreCase("pink"))
                 backgroundColor = "-fx-background-color: pink";
             else
                 backgroundColor = "-fx-background-color: white";
@@ -78,7 +90,7 @@ public class WarGamesApp extends Application {
         // Set play game button to switch stages and start game only if avatar selected
         playGame.setOnAction(e-> {
             if (Player.getAvatarSelected() != null) {
-                GameBoard game = new GameBoard(primaryStage);
+                GameBoard game = new GameBoard(primaryStage); // Create a new stage to play the game
             }
             else
                 System.out.println("Select an avatar");
@@ -95,7 +107,20 @@ public class WarGamesApp extends Application {
         // Create a try block
         try {
 
+            // Update this primary stage
             this.primaryStage = primaryStage;
+
+            /*-------------------------------------Background Choice pane---------------------------------------------*/
+
+            // Set the backgound pane styling
+            backgroundSelect.setPadding(new Insets(5,5,5,5));
+            backgroundSelect.setAlignment(Pos.CENTER);
+
+            // Add the background text and choicebox to the hbox
+            backgroundSelect.getChildren().addAll(chooseBackground, background);
+
+            // Set the font of the background selection text
+            chooseBackground.setFont(Font.font("Verdana", FontWeight.BOLD, 25));
 
             /*-------------------------------------Button start stop pane--------------------------------------------*/
 
@@ -107,10 +132,7 @@ public class WarGamesApp extends Application {
             // Add the buttons to the button pane
             buttonPane.getChildren().addAll(playGame, exit);
 
-
             /*--------------------------------- Player Selection Pane Config-----------------------------------------*/
-
-
 
             // Set the selection pane padding and alignment
             selectionPane.setPadding(new Insets(5,5,5,5));
@@ -118,6 +140,9 @@ public class WarGamesApp extends Application {
 
             // Add the avatarText to the selection pane
             selectionPane.getChildren().add(avatarText);
+
+            // Set the font of the avatar selection text
+            avatarText.setFont(Font.font("Verdana", FontWeight.BOLD, 25));
 
             // Create a grid plane for player avatar selection
             GridPane avatarSelectionPane = new GridPane();
@@ -144,7 +169,6 @@ public class WarGamesApp extends Application {
             avatar5.setOnMouseClicked(e -> Player.setAvatarSelected(Player.getAvatar5()));
             avatar6.setOnMouseClicked(e -> Player.setAvatarSelected(Player.getAvatar6()));
 
-
             // Tie the Toggle Buttons and Player Avatars to the grid pane
             avatarSelectionPane.add(avatar1, 0, 0);
             avatarSelectionPane.add(Player.getAvatar1(), 1, 0);
@@ -164,8 +188,7 @@ public class WarGamesApp extends Application {
 
             /*------------------------------------Root pane and Scene config------------------------------------------*/
 
-
-
+            // Get the scene to initiate the stage
             scene = initStage();
 
             // Set the stage Title and Scene then play
@@ -181,18 +204,20 @@ public class WarGamesApp extends Application {
         }
     }
 
+    // Create a method to initiate scene
     private Scene initStage() {
-        root.setTop(background );
+        // Set the nodes in the border pane
+        root.setTop(backgroundSelect);
         root.setRight(buttonPane);
         root.setCenter(selectionPane);
         root.setStyle(String.valueOf(backgroundColor));
 
-        // Create a menuScene and set it to hold the border pane
+        // Return a menuScene and set it to hold the border pane
         return new Scene(root, 675, 375);
     }
 
+    // Main method launch
     public static void main(String[] args) {
         launch(args);
     }
-
 }
