@@ -3,6 +3,7 @@ package com.wargames;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+// Declare computer class
 public class Computer {
 
     // Declare and initialize ImageView for computer avatar
@@ -36,10 +37,5 @@ public class Computer {
             return "You're a Loser!";
         else
             return "I can do this in my sleep!";
-
-
-
     }
-
-
 }

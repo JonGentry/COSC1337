@@ -3,6 +3,7 @@ package com.wargames;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+// Declare player class
 public class Player {
 
     // Declare and initialize ImageView for the player piece
