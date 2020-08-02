@@ -235,7 +235,7 @@ public class GameBoard {
 
             // Action to indicate player's selection
             this.setOnMouseClicked(e -> {
-                if (!isWon(comp) && !isWon(player)) // Check to make sure that the game isn't over
+                if (!isWon(comp) || !isWon(player)) // Check to make sure that the game isn't over
                 playerTurn();
             });
         }
@@ -317,7 +317,7 @@ public class GameBoard {
         private void playerTurn() {
 
             // If cell is empty and game is not over
-            if (token == '_' && player != '_') {
+            if (token == '_' && player != '_' && !isWon(comp)) {
                 setToken(player); // Set token in the cell
 
                 // Check for win condition
