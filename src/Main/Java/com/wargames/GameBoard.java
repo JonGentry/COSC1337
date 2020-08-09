@@ -1,3 +1,14 @@
+/*
+ * COSC 1337 Programming Fundamentals II
+ * Date: 8/9/2020
+ * Fundamentals Group Project
+ * Topic: War Games - Tic Tac Toe
+ * Students:
+ * Name: Jonathan Gentry
+ * Name: Rapheal Offiah
+ * Name: Caleb Joiner
+ */
+
 package com.wargames;
 
 import javafx.animation.FadeTransition;
